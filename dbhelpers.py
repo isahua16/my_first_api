@@ -1,12 +1,13 @@
 import mariadb
 import dbcreds
 
-def run_statement(sql):
+# Takes a mandatory argument as an SQL statement, and an optional arguments called args. If args is not provided, it will be None.
+def run_statement(sql, args=None):
     try:
         result = None
         conn = mariadb.connect(**dbcreds.conn_params)
         cursor = conn.cursor()
-        cursor.excecute(sql)
+        cursor.execute(sql, args)
         result = cursor.fetchall()
     except mariadb.OperationalError as error:
         print("Operational Error", error)
@@ -31,6 +32,7 @@ def run_statement(sql):
     except Exception as error:
         print("Unknown Error", error)
     finally:
+        # Close DB connections and return the value. The function will return None/Null if an error occured.
         if(cursor != None):
             cursor.close()
         if(conn != None):
